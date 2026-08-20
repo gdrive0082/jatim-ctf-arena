@@ -5,7 +5,7 @@ import { inspectAttr } from 'kimi-plugin-inspect-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: './',
+  base: '/', // wajib absolut: route /lab/* me-rewrite ke index.html
   plugins: [inspectAttr(), react()],
   build: {
     sourcemap: true, // [internal] jangan deploy ke publik — lihat internal-notes.ts
