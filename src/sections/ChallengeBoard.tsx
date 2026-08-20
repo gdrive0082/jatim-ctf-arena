@@ -36,6 +36,21 @@ const CATEGORY_COLOR: Record<string, string> = {
   STEGO: "text-pink-400 border-pink-500/50",
   REVERSING: "text-orange-400 border-orange-500/50",
   OSINT: "text-sky-400 border-sky-500/50",
+  EXPLOIT: "text-red-400 border-red-500/50",
+  DFIR: "text-lime-400 border-lime-500/50",
+  BINARY: "text-amber-400 border-amber-500/50",
+  CRACKING: "text-fuchsia-400 border-fuchsia-500/50",
+};
+
+const TIER_META: Record<number, { title: string; desc: string }> = {
+  1: {
+    title: "TIER 1 — PEMANASAN",
+    desc: "Fondasi: recon, encoding, metadata, morse, source-code diving, git forensics.",
+  },
+  2: {
+    title: "TIER 2 — CVE LEVEL",
+    desc: "Simulasi insiden nyata: Log4Shell DFIR, DNS tunneling PCAP, reversing binary, crack JWT & shadow hash, insecure deserialization. Tidak untuk yang berhati lemah.",
+  },
 };
 
 function loadSolved(): string[] {
@@ -120,60 +135,81 @@ export default function ChallengeBoard() {
         )}
       </div>
 
-      {/* Grid */}
-      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {CHALLENGES.map((c) => {
-          const isSolved = solved.includes(c.id);
-          return (
-            <button
-              key={c.id}
-              onClick={() => openChallenge(c)}
-              className={`group relative overflow-hidden rounded-lg border p-5 text-left transition backdrop-blur ${
-                isSolved
-                  ? "border-emerald-400/60 bg-emerald-950/30 shadow-[0_0_30px_-10px_rgba(16,185,129,0.6)]"
-                  : "border-red-500/30 bg-black/60 hover:border-red-400/60 hover:shadow-[0_0_30px_-10px_rgba(239,68,68,0.5)]"
-              }`}
-            >
-              <div className="mb-3 flex items-center justify-between">
-                <Badge
-                  variant="outline"
-                  className={`font-mono text-[10px] tracking-widest ${CATEGORY_COLOR[c.category]}`}
-                >
-                  {c.category}
-                </Badge>
-                <span
-                  className={`flex items-center gap-1 font-mono text-[10px] font-bold tracking-widest ${
-                    c.difficulty === "INSANE" ? "text-red-500" : "text-yellow-500"
+      {/* Tiers */}
+      {[1, 2].map((tier) => (
+        <div key={tier} className="mb-14">
+          <div className="mb-6 border-l-4 pl-4" style={{ borderColor: tier === 2 ? "#ef4444" : "#10b981" }}>
+            <h3 className={`text-xl font-black tracking-widest ${tier === 2 ? "text-red-400" : "text-emerald-300"}`}>
+              {TIER_META[tier].title}
+            </h3>
+            <p className="text-xs text-emerald-100/50">{TIER_META[tier].desc}</p>
+          </div>
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {CHALLENGES.filter((c) => c.tier === tier).map((c) => {
+              const isSolved = solved.includes(c.id);
+              return (
+                <button
+                  key={c.id}
+                  onClick={() => openChallenge(c)}
+                  className={`group relative overflow-hidden rounded-lg border p-5 text-left transition backdrop-blur ${
+                    isSolved
+                      ? "border-emerald-400/60 bg-emerald-950/30 shadow-[0_0_30px_-10px_rgba(16,185,129,0.6)]"
+                      : c.tier === 2
+                        ? "border-red-600/50 bg-[#0d0303]/80 hover:border-red-500/70 hover:shadow-[0_0_30px_-8px_rgba(239,68,68,0.7)]"
+                        : "border-red-500/30 bg-black/60 hover:border-red-400/60 hover:shadow-[0_0_30px_-10px_rgba(239,68,68,0.5)]"
                   }`}
                 >
-                  <Skull className="h-3 w-3" />
-                  {c.difficulty}
-                </span>
-              </div>
-              <h3 className="text-lg font-bold text-emerald-100 group-hover:text-emerald-300">
-                {c.title}
-              </h3>
-              <p className="mt-1 font-mono text-[10px] tracking-widest text-emerald-100/40">
-                {c.codename}
-              </p>
-              <div className="mt-4 flex items-center justify-between">
-                <span className="font-mono text-sm font-bold text-red-400">
-                  {c.points} pts
-                </span>
-                {isSolved ? (
-                  <span className="flex items-center gap-1 text-xs font-bold text-emerald-400">
-                    <CheckCircle2 className="h-4 w-4" /> SOLVED
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1 text-xs text-emerald-100/40">
-                    <Lock className="h-3.5 w-3.5" /> belum direbut
-                  </span>
-                )}
-              </div>
-            </button>
-          );
-        })}
-      </div>
+                  {c.tier === 2 && !isSolved && (
+                    <span className="absolute right-0 top-0 rounded-bl bg-red-600/90 px-2 py-0.5 font-mono text-[9px] font-black tracking-widest text-white">
+                      CVE
+                    </span>
+                  )}
+                  <div className="mb-3 flex items-center justify-between">
+                    <Badge
+                      variant="outline"
+                      className={`font-mono text-[10px] tracking-widest ${CATEGORY_COLOR[c.category]}`}
+                    >
+                      {c.category}
+                    </Badge>
+                    <span
+                      className={`flex items-center gap-1 font-mono text-[10px] font-bold tracking-widest ${
+                        c.difficulty === "CVE"
+                          ? "text-red-500"
+                          : c.difficulty === "INSANE"
+                            ? "text-orange-500"
+                            : "text-yellow-500"
+                      }`}
+                    >
+                      <Skull className="h-3 w-3" />
+                      {c.difficulty}
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-bold text-emerald-100 group-hover:text-emerald-300">
+                    {c.title}
+                  </h3>
+                  <p className="mt-1 font-mono text-[10px] tracking-widest text-emerald-100/40">
+                    {c.codename}
+                  </p>
+                  <div className="mt-4 flex items-center justify-between">
+                    <span className="font-mono text-sm font-bold text-red-400">
+                      {c.points} pts
+                    </span>
+                    {isSolved ? (
+                      <span className="flex items-center gap-1 text-xs font-bold text-emerald-400">
+                        <CheckCircle2 className="h-4 w-4" /> SOLVED
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1 text-xs text-emerald-100/40">
+                        <Lock className="h-3.5 w-3.5" /> belum direbut
+                      </span>
+                    )}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ))}
 
       {/* Detail dialog */}
       <Dialog open={!!active} onOpenChange={(o) => !o && setActive(null)}>

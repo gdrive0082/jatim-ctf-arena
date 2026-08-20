@@ -5,6 +5,7 @@ const BOOT_LINES = [
   "[ OK ] Memuat modul kernel jatim-cybersec v6.6.6",
   "[ OK ] Mounting /arena/challenges ... 6 target ditemukan",
   "[WARN] Integritas admin: COMPROMISED",
+  "[CRIT] Tier-2 CVE module armed: log4shell, pcap, binary, jwt, shadow, pickle",
   "[ OK ] Flag format: JTCS{...}",
   "[ OK ] Semua clue telah disembunyikan di lokasi masing-masing",
   "> Inisialisasi CTF ARENA selesai. Selamat berburu, hacker.",
@@ -55,8 +56,9 @@ export default function Hero() {
         JATIM <span className="text-red-500">CTF</span> ARENA
       </h1>
       <p className="mt-4 max-w-xl text-center text-sm text-emerald-100/60 md:text-base">
-        Arena Capture The Flag tingkat <span className="text-red-400 font-semibold">HARD</span> untuk
-        para pemburu flag Jawa Timur. Enam tantangan. Enam bendera. Nol ampunan.
+        Arena Capture The Flag untuk para pemburu flag Jawa Timur. Dua belas tantangan
+        dalam dua tier: pemanasan <span className="text-yellow-400 font-semibold">HARD</span> dan
+        simulasi insiden nyata level <span className="text-red-400 font-semibold">CVE</span>. Nol ampunan.
       </p>
 
       <div className="mt-10 w-full max-w-2xl overflow-hidden rounded-lg border border-emerald-500/30 bg-black/80 shadow-[0_0_60px_-15px_rgba(16,185,129,0.5)] backdrop-blur">

@@ -1,0 +1,6 @@
+TOKEN HASIL INTERSEPSI — sesi admin tertangkap di jaringan kafe
+=============================================================
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwZXNlcnRhLTA3NyIsInJvbGUiOiJ1c2VyIiwiaXNzIjoiamF0aW0tY3liZXJzZWMtYXV0aCIsImlhdCI6MTc1NTEzMDAwMCwibm90ZSI6ImFkbWluIHJvbGUgdW5sb2NrcyAvYXBpL2ZsYWcifQ.V4sm9DckiaJC4B3iNwoWnGrBDGmTPe_bqxanIVBznbg
+
+catatan analis: secret HMAC lemah, kemungkinan ada di wordlist lokal.

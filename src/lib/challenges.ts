@@ -11,15 +11,18 @@
 
 export const _ct = [0, 21, 23, 26, 54, 53, 48, 113, 50, 13, 57, 113, 33, 59, 46, 112, 6, 115, 54, 13, 62, 41, 103, 22, 57, 43, 104, 48, 33, 13, 121, 56, 103, 52];
 
-export type Category = "RECON" | "CRYPTO" | "FORENSICS" | "STEGO" | "REVERSING" | "OSINT";
+export type Category =
+  | "RECON" | "CRYPTO" | "FORENSICS" | "STEGO" | "REVERSING" | "OSINT"
+  | "EXPLOIT" | "DFIR" | "BINARY" | "CRACKING";
 
 export interface Challenge {
   id: string;
   title: string;
   codename: string;
   category: Category;
+  tier: 1 | 2;
   points: number;
-  difficulty: "HARD" | "INSANE";
+  difficulty: "HARD" | "INSANE" | "CVE";
   description: string;
   clue: string;
   flagHash: string; // sha256 hex of the real flag
@@ -27,11 +30,13 @@ export interface Challenge {
 }
 
 export const CHALLENGES: Challenge[] = [
+  // ================= TIER 1 — PEMANASAN =================
   {
     id: "robot-trace",
     title: "Jejak Robot",
     codename: "ROBOT-TRACE",
     category: "RECON",
+    tier: 1,
     points: 300,
     difficulty: "HARD",
     description:
@@ -45,6 +50,7 @@ export const CHALLENGES: Challenge[] = [
     title: "Batik Cipher",
     codename: "BATIK-CIPHER",
     category: "CRYPTO",
+    tier: 1,
     points: 400,
     difficulty: "HARD",
     description:
@@ -59,6 +65,7 @@ export const CHALLENGES: Challenge[] = [
     title: "Bisikan Bromo",
     codename: "BROMO-WHISPER",
     category: "FORENSICS",
+    tier: 1,
     points: 400,
     difficulty: "HARD",
     description:
@@ -73,6 +80,7 @@ export const CHALLENGES: Challenge[] = [
     title: "Gema Majapahit",
     codename: "MAJAPAHIT-ECHO",
     category: "STEGO",
+    tier: 1,
     points: 500,
     difficulty: "HARD",
     description:
@@ -87,6 +95,7 @@ export const CHALLENGES: Challenge[] = [
     title: "Mata Ketiga",
     codename: "THIRD-EYE",
     category: "REVERSING",
+    tier: 1,
     points: 600,
     difficulty: "INSANE",
     description:
@@ -100,6 +109,7 @@ export const CHALLENGES: Challenge[] = [
     title: "Kera Sakti",
     codename: "KERA-SAKTI",
     category: "OSINT",
+    tier: 1,
     points: 600,
     difficulty: "INSANE",
     description:
@@ -107,6 +117,98 @@ export const CHALLENGES: Challenge[] = [
     clue:
       "Temukan repositori sumber website ini di GitHub, lalu baca git log-nya. Flag ada di commit awal sebelum 'dihapus'. git log --all, git show, atau tombol History di GitHub adalah jalanmu.",
     flagHash: "bc4eee39fcc8f339de7015c12110b9de1d264f4bfdc6ab24019428fd22689280",
+  },
+
+  // ================= TIER 2 — CVE LEVEL =================
+  {
+    id: "log4shell-aftermath",
+    title: "Sisa Letusan Log4Shell",
+    codename: "LOG4SHELL-AFTERMATH",
+    category: "DFIR",
+    tier: 2,
+    points: 700,
+    difficulty: "CVE",
+    description:
+      "Tahun 2021 dunia diguncang CVE-2021-44228 (Log4Shell). Kamu adalah analis DFIR yang menerima access.log dari server Jawa Timur yang diretas lewat JNDI injection. Di antara 2.400 baris log, penyerang mengeksfiltrasi sebuah flag — dipecah menjadi potongan-potongan kecil yang diselundupkan lewat string JNDI. Rekonstruksi benderanya sebelum bukti dihapus selamanya.",
+    clue:
+      "grep 'jndi' adalah awalmu. Perhatikan pola partNNofMM di URL ldap:// penyerang — kumpulkan potongannya, urutkan, gabungkan, lalu decode base64-nya.",
+    flagHash: "9248cbf2cec344449043f7340ef1c68976ddb43d015cb01ba1a2dd68f299984b",
+    download: { label: "breach-access.log", href: "files/breach-access.log" },
+  },
+  {
+    id: "silent-exfil",
+    title: "Silent Exfil",
+    codename: "SILENT-EXFIL",
+    category: "DFIR",
+    tier: 2,
+    points: 800,
+    difficulty: "CVE",
+    description:
+      "Sebuah sensor jaringan merekam silent-exfil.pcap dari laptop pegawai yang terinfeksi malware. Tidak ada koneksi mencurigakan ke IP asing — hanya query DNS yang tampak normal. Tapi malware kelas APT tidak pernah berisik: ia bersenandung lewat subdomain. Buka dengan Wireshark/tshark dan temukan terowongan DNS-nya.",
+    clue:
+      "Filter: dns. Cari query ke domain aneh ber-akhiran sama. Label pertamanya adalah potongan Base32 bernomor urut. Gabungkan, tambahkan padding '=' jika perlu, lalu base32-decode.",
+    flagHash: "87cf32afe75477ebce18ca73db2c1991ea0ee67e508dc0bd439f4dc615afd3a8",
+    download: { label: "silent-exfil.pcap", href: "files/silent-exfil.pcap" },
+  },
+  {
+    id: "petra-binary",
+    title: "Binary Petra",
+    codename: "PETRA-BINARY",
+    category: "BINARY",
+    tier: 2,
+    points: 800,
+    difficulty: "CVE",
+    description:
+      "Binary bernama 'petra' disita dari server C2. Ia memvalidasi sebuah flag — tapi strings tidak akan menolongmu: benderanya disandikan per-byte dengan kunci bergulir di dalam kode mesin. Ini latihan reversing sungguhan: bongkar dengan Ghidra, radare2, objdump, atau lldb. Analisis statis cukup — kamu tidak wajib menjalankannya.",
+    clue:
+      "Temukan fungsi main, cari array byte 'enc' dan string kuncinya, pahami loop perbandingannya: tiap byte flag di-XOR dengan kunci bergulir (indeks i*7 mod panjang kunci). Reproduksi perhitungannya di Python untuk membalik cipher-nya.",
+    flagHash: "58561052a2a149465b316794b7271e0922a0c0dda60be07f20f32fc4e02b80c4",
+    download: { label: "petra", href: "files/petra" },
+  },
+  {
+    id: "rogue-token",
+    title: "Token Tak Bertuan",
+    codename: "ROGUE-TOKEN",
+    category: "CRACKING",
+    tier: 2,
+    points: 700,
+    difficulty: "CVE",
+    description:
+      "Tim blue team mengintersepsi sebuah JWT dari jaringan kafe tempat admin Jatim Cybersec pernah login. Token ditandatangani HS256 dengan secret yang lemah — gaya kesalahan nyata di balik banyak insiden (lihat CVE-2018-0114 & kawan-kawan). Retas secret-nya memakai wordlist lokal rockyou-jatim.txt. Flag-nya adalah: JTCS{<secret>}.",
+    clue:
+      "Decode dulu header.payload-nya untuk paham strukturnya. Lalu brute-force signature HMAC-SHA256 dengan tiap kata di wordlist (hashcat mode 16500, jwt_tool, atau skrip Python 10 baris). Secret-nya bergaya lokal.",
+    flagHash: "0332f1a02db918d47b2118b90bcfd851f4ce60fd499b7a5876ac66a92ccb7fc7",
+    download: { label: "captured-token.txt", href: "vault/captured-token.txt" },
+  },
+  {
+    id: "shadow-leak",
+    title: "Shadow Leak",
+    codename: "SHADOW-LEAK",
+    category: "CRACKING",
+    tier: 2,
+    points: 700,
+    difficulty: "CVE",
+    description:
+      "Sebuah dump database bocor: tiga akun dengan hash password dan salt-nya. Polanya persis kebocoran nyata vBulletin/MyBB yang memakan jutaan korban. Algoritmanya sha256($pass.$salt) — hashcat mode 1410. Retas hash milik 'admin'. Flag-nya adalah: JTCS{<password admin>}.",
+    clue:
+      "Gunakan wordlist rockyou-jatim.txt. Tanpa GPU pun bisa: loop Python dengan hashlib.sha256((kata + salt).encode()) sudah cukup. Password admin bergaya leet-speak.",
+    flagHash: "ab07f8ee790693a1f4d9b0a86713b7741d872a9244588ad27d718aeefb8d587a",
+    download: { label: "shadow-leak.txt", href: "vault/shadow-leak.txt" },
+  },
+  {
+    id: "evil-pickle",
+    title: "Pickle Beracun",
+    codename: "EVIL-PICKLE",
+    category: "EXPLOIT",
+    tier: 2,
+    points: 800,
+    difficulty: "CVE",
+    description:
+      "Insecure deserialization — akar dari rantai RCE paling mematikan (Apache Commons, CVE-2015-4852; PyYAML, CVE-2020-14343). Kamu menemukan payload.b64.txt: objek Python pickle ter-serialize dari server yang diretas. Di dalamnya ada 'blob' warisan yang menyimpan flag. JANGAN pernah unpickle file tak dikenal di mesin produksi — bedah dulu dengan pickletools.",
+    clue:
+      "base64 -d lalu bedah: python -m pickletools, atau pickle.loads di sandbox. Field 'payload' adalah bytes yang tiap bytenya di-XOR 0x42. Balikkan operasinya.",
+    flagHash: "b881a4fce249099bb3019d032fc7f0d219a25839fe9bd27109531a92b020c68f",
+    download: { label: "payload.b64.txt", href: "files/payload.b64.txt" },
   },
 ];
 

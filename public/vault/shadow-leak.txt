@@ -1,0 +1,8 @@
+DUMP DATABASE — tabel users (format: user:hash:salt)
+====================================================
+
+admin:0e5c202e2597a32fc2bd0d43e23e7bf485c3ff75cf0da51bf3fc8f2815c62b52:JTCS2026
+operator:f092a45071b0a0cc3080e0b57d7d39b73a59b9d45f75503c40217fece46822c7:JTCS2026
+guest:59e47352d8cf7b7445a49635a2eae0bc68774b1b1d4d9f7751455d0a0834f4b0:JTCS2026
+
+algoritma: sha256($pass.$salt) — hashcat mode 1410 / john dynamic
