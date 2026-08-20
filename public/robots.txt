@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /vault/
+Disallow: /admin-backup/
+
+# catatan admin: aku sudah memindahkan catatan sensitif ke /vault/notes.txt
+# jangan sampai peserta CTF menemukannya... dua kali dilipat harusnya aman
