@@ -7,6 +7,9 @@ import { inspectAttr } from 'kimi-plugin-inspect-react'
 export default defineConfig({
   base: './',
   plugins: [inspectAttr(), react()],
+  build: {
+    sourcemap: true, // [internal] jangan deploy ke publik — lihat internal-notes.ts
+  },
   server: {
     port: 3000,
   },

@@ -20,13 +20,14 @@ export interface Challenge {
   title: string;
   codename: string;
   category: Category;
-  tier: 1 | 2 | 3;
+  tier: 1 | 2 | 3 | 4;
   points: number;
   difficulty: "HARD" | "INSANE" | "CVE" | "0-DAY";
   description: string;
   clue: string;
   flagHash: string; // sha256 hex of the real flag
   download?: { label: string; href: string };
+  labPath?: string; // interactive web-exploit lab route (/lab/:tool)
 }
 
 export const CHALLENGES: Challenge[] = [
@@ -444,6 +445,156 @@ export const CHALLENGES: Challenge[] = [
       "Cari byte pattern DE AD BE EF (ada dua, sebagai pagar pembuka dan penutup). Isi di antaranya adalah flag yang tiap bytenya di-XOR 0xAA.",
     flagHash: "127d99ff1a2f65fd45d5305a6e8fdc271696f7969ff18f58b7f911015429bca8",
     download: { label: "heap-dump.bin", href: "files/heap-dump.bin" },
+  },
+
+  // ================= TIER 4 — WEB EXPLOIT =================
+  {
+    id: "dom-xss",
+    title: "Refleksi Beracun",
+    codename: "DOM-XSS",
+    category: "EXPLOIT",
+    tier: 4,
+    points: 700,
+    difficulty: "HARD",
+    description:
+      "Lab: Mesin Pencari Nusantara me-refleksikan parameter ?q= langsung ke DOM via innerHTML — tanpa sanitasi, tanpa CSP. Pola persis yang memakan ribuan situs nyata. Tugasmu: suntikkan payload yang mengeksekusi JavaScript dan panggil fungsi pwn() untuk membuka bendera.",
+    clue:
+      "Karena ini DOM-based, tag <script> tidak akan jalan. Pakai event handler: <img src=x onerror=pwn()> lalu perhatikan hasilnya.",
+    flagHash: "c7ca215073d74605673120868cda68000d48a075f85d571f5b41d2265c73c562",
+    labPath: "/lab/xss",
+  },
+  {
+    id: "sqli-login",
+    title: "Login Administrator",
+    codename: "SQLI-LOGIN",
+    category: "EXPLOIT",
+    tier: 4,
+    points: 700,
+    difficulty: "HARD",
+    description:
+      "Lab: Portal login jadul merangkai query SQL dengan string concatenation — akar dari hampir setiap kebocoran data besar (SQL Injection, OWASP #1 bertahun-tahun). Kamu punya akun tamu (tamu/tamu123), tapi targetmu adalah tabel admin. Bikin query-nya 'berbohong'.",
+    clue:
+      "Klasik tak pernah mati: ' OR '1'='1' -- di kolom username/password. Perhatikan query mentah yang ditampilkan.",
+    flagHash: "d2ea759dc7bbeae6583786ce80969354cbb3b28b1fe6722126563acf61ac2a1a",
+    labPath: "/lab/sqli",
+  },
+  {
+    id: "ssti-eval",
+    title: "Template Neraka",
+    codename: "SSTI-EVAL",
+    category: "EXPLOIT",
+    tier: 4,
+    points: 800,
+    difficulty: "HARD",
+    description:
+      "Lab: Template Renderer v0.1 mengeksekusi ekspresi di dalam {{...}} — Server-Side Template Injection versi klien (pola CVE-2022-22963 & kawan-kawan). Di scope renderer ada 'flagvault' yang di-redact dari parameter. Capai lewat jalan belakang: globalThis.",
+    clue:
+      "Coba dulu {{7*7}} untuk membuktikan eksekusi. Lalu jelajahi: {{Object.keys(globalThis)}} — ada properti __jtcs_* yang menarik.",
+    flagHash: "a724df0fcee440e10742947bc26f0863ad6189133cd04c0d75ab031cedd8076a",
+    labPath: "/lab/ssti",
+  },
+  {
+    id: "proto-pollute",
+    title: "Polusi Prototipe",
+    codename: "PROTO-POLLUTE",
+    category: "EXPLOIT",
+    tier: 4,
+    points: 800,
+    difficulty: "HARD",
+    description:
+      "Lab: Panel pengaturan me-merge JSON kamu secara rekursif tanpa memfilter key berbahaya. Prototype pollution adalah cacat kelas berat di ekosistem JS (lodash CVE-2019-10744 & kawan-kawan). Kalau SEMUA objek di aplikasi ini tiba-tiba punya isAdmin=true... pintu rahasia terbuka.",
+    clue:
+      "Kirim JSON berisi key __proto__ bertingkat: {\"__proto__\":{\"isAdmin\":true}}. Lalu pikirkan: kenapa objek kosong pun ikut tercemar?",
+    flagHash: "9e845baaabb052cd6a3c63bf59f7e99d145e43def42b75207c437aafa288af1b",
+    labPath: "/lab/proto",
+  },
+  {
+    id: "idor-users",
+    title: "Gudang User",
+    codename: "IDOR-USERS",
+    category: "EXPLOIT",
+    tier: 4,
+    points: 600,
+    difficulty: "HARD",
+    description:
+      "Lab: Halaman profil memuat data dari /api/users/<id>.json tanpa pemeriksaan otorisasi apa pun — Insecure Direct Object Reference, biang kebocoran data massal (kasus nyata: Parler, First American). Kamu user #2. Admin konon punya id paling istimewa.",
+    clue:
+      "Enumerasi id 0 sampai 7. Angka paling kecil sering paling berkuasa.",
+    flagHash: "cd31b875178a480bfebe1dd7c4b7ebc80d53cfce4b95e15f5d6ba2a3167f3371",
+    labPath: "/lab/idor",
+  },
+  {
+    id: "path-traversal",
+    title: "Sang Pembaca File",
+    codename: "PATH-TRAVERSAL",
+    category: "EXPLOIT",
+    tier: 4,
+    points: 700,
+    difficulty: "HARD",
+    description:
+      "Lab: Pembaca dokumen membatasi akses ke /vault/read/ dengan filter yang menghapus '../' — tapi hanya SATU kali. Teknik traversal ini menembus ribuan aplikasi nyata (CVE-2021-41773 Apache). Target: /vault/secret/flag-internal.txt.",
+    clue:
+      "Kalau filter menghapus '../' sekali, bagaimana membuat '../' baru dari sisa penghapusan? Pikirkan '....//'.",
+    flagHash: "5d86ddc87089aba7234e1b957f904fe9e4b7b042a2b798babb0da460a488890d",
+    labPath: "/lab/viewer?file=welcome.txt",
+  },
+  {
+    id: "sourcemap-leak",
+    title: "Peta Harta Karun",
+    codename: "SOURCEMAP-LEAK",
+    category: "RECON",
+    tier: 4,
+    points: 650,
+    difficulty: "HARD",
+    description:
+      "Build produksi arena ini membawa sesuatu yang seharusnya tidak ikut deploy: source map lengkap dengan sourcesContent — kode sumber ASLI, komentar internal termasuk. Ini kesalahan konfigurasi nyata yang membocorkan rahasia banyak perusahaan. Ada catatan developer yang ceroboh di salah satu file sumber.",
+    clue:
+      "Cari file .js.map di sebelah bundle JS (lihat akhir berkas .js). Unduh, lalu grep 'JTCS' atau 'BENDERALAPDARURAT' di sourcesContent.",
+    flagHash: "f623ba84f09d29b4c7ca3f335fb6190301579a072cb3d3d34162fb19f663f909",
+  },
+  {
+    id: "bac-admin",
+    title: "Panel Tanpa Penjaga",
+    codename: "BAC-ADMIN",
+    category: "EXPLOIT",
+    tier: 4,
+    points: 600,
+    difficulty: "HARD",
+    description:
+      "Lab: Panel administrasi yang otorisasinya dipercayakan pada... localStorage. Broken Access Control adalah OWASP #1 saat ini — keputusan keamanan tidak boleh pernah dipercayakan ke sisi klien. Jadilah admin tanpa izin.",
+    clue:
+      "DevTools → Application → Local Storage. Ubah jtcs_role dari guest menjadi admin, lalu refresh halaman.",
+    flagHash: "0aede1e2c2da3355a99f586d12ba43243c3aa552aeceb244a2b92a3512c0660c",
+    labPath: "/lab/admin",
+  },
+  {
+    id: "otp-brute",
+    title: "OTP Tanpa Pelindung",
+    codename: "OTP-BRUTE",
+    category: "CRACKING",
+    tier: 4,
+    points: 750,
+    difficulty: "HARD",
+    description:
+      "Lab: Gerbang OTP 6 digit tanpa rate limit, lockout, maupun CAPTCHA — pola yang membobol akun Instagram (2019) dan banyak layanan lain. Hash SHA-256 dari OTP terekspos di bundle JavaScript. Sejuta kemungkinan? CPU-mu menyelesaikannya dalam hitungan detik.",
+    clue:
+      "Ekstrak OTP_HASH dari bundle, lalu brute-force 000000–999999 dengan Python (hashlib). OTP yang benar sekaligus membuka bendera terenkripsi di halaman.",
+    flagHash: "962f39bff60c811df7824e6f51ba13aabaa4c9c90ac8494f646de06b2be4fb4b",
+    labPath: "/lab/otp",
+  },
+  {
+    id: "dir-buster",
+    title: "Direktori Terlarang",
+    codename: "DIR-BUSTER",
+    category: "RECON",
+    tier: 4,
+    points: 550,
+    difficulty: "HARD",
+    description:
+      "Keamanan lewat kerahasiaan nama bukan keamanan. Suatu tempat di server ini ada panel teknisi yang tidak tertaut dari mana pun — tapi namanya bisa ditebak mesin. Gunakan wordlist rockyou-jatim.txt dari tier sebelumnya (atau wordlist favoritmu) bersama ffuf/gobuster/dirsearch.",
+    clue:
+      "ffuf -w files/rockyou-jatim.txt -u https://jatim-ctf-arena.vercel.app/panel-FUZZ/ — kata kuncinya dialek leet 'engineer'.",
+    flagHash: "508e72051ae5c51f53966442816c1cdf4bff23f06f9d63037893cd3b46345868",
   },
 ];
 

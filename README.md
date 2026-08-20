@@ -1,7 +1,7 @@
 # JATIM CYBERSEC — CTF ARENA
 
 Arena Capture The Flag (CTF) untuk komunitas Jawa Timur Cybersecurity.
-Dua puluh delapan challenge jeopardy-style dalam tiga tier — semuanya bisa diselesaikan langsung dari website, repo ini, dan file artefak yang disediakan.
+38 challenge jeopardy-style dalam 4 tier — semuanya bisa diselesaikan langsung dari website, repo ini, dan file artefak yang disediakan.
 
 ## Tier 1 — Pemanasan (HARD)
 
@@ -45,6 +45,21 @@ Dua puluh delapan challenge jeopardy-style dalam tiga tier — semuanya bisa dis
 | ENCODING-TOWER | Cryptography | 850 | Menara 7 lapis: reverse→ROT13→Base85→gzip→Base32→hex→Base64 |
 | BRAINFUCK | Reversing | 850 | Interpretasi program Brainfuck |
 | HEAP-BLEED | Forensics | 900 | Memory carving ala Heartbleed (CVE-2014-0160), marker 0xDEADBEEF + XOR |
+
+## Tier 4 — Web Exploit (lab interaktif di /lab/*)
+
+| Codename | Kategori | Poin | Teknik |
+|---|---|---|---|
+| DOM-XSS | Exploit | 700 | Reflected DOM XSS + event handler injection |
+| SQLI-LOGIN | Exploit | 700 | SQL injection klasik ' OR '1'='1' -- |
+| SSTI-EVAL | Exploit | 800 | Template injection, jelajah globalThis |
+| PROTO-POLLUTE | Exploit | 800 | Prototype pollution via merge JSON rentan |
+| IDOR-USERS | Exploit | 600 | Enumerasi /api/users/*.json tanpa otorisasi |
+| PATH-TRAVERSAL | Exploit | 700 | Bypass filter ../ dengan ....// |
+| SOURCEMAP-LEAK | Recon | 650 | sourcesContent di .js.map membocorkan catatan internal |
+| BAC-ADMIN | Exploit | 600 | Broken access control via localStorage |
+| OTP-BRUTE | Cracking | 750 | Brute-force OTP 6 digit tanpa rate limit |
+| DIR-BUSTER | Recon | 550 | ffuf/gobuster menemukan panel tersembunyi |
 
 Format flag: `JTCS{...}`
 

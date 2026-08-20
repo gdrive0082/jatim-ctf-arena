@@ -40,10 +40,11 @@ export default function About() {
         <p className="mb-8 max-w-3xl text-sm leading-relaxed text-emerald-100/60">
           <span className="font-bold text-emerald-300">JATIM CYBERSEC</span> adalah
           wahana belajar cybersecurity untuk komunitas Jawa Timur. Arena CTF ini
-          bergaya jeopardy dengan 28 tantangan dalam 3 tier: setiap challenge
+          bergaya jeopardy dengan 38 tantangan dalam 4 tier — termasuk 8 lab web
+          interaktif yang bisa kamu retas langsung: setiap challenge
           menyembunyikan sebuah "flag" — string rahasia — yang hanya bisa kamu
           temukan dengan teknik recon, kriptografi, forensik, steganografi,
-          reversing, cracking, dan analisis insiden sungguhan.
+          reversing, cracking, eksploitasi web, dan analisis insiden sungguhan.
         </p>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {RULES.map((r, i) => (

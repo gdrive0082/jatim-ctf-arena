@@ -1,0 +1,1 @@
+PANDUAN: gunakan parameter ?file=<nama> untuk membaca dokumen publik.

@@ -5,9 +5,11 @@ import Hero from "@/sections/Hero";
 import ChallengeBoard from "@/sections/ChallengeBoard";
 import About from "@/sections/About";
 import { Toaster } from "@/components/ui/sonner";
+import { INTERNAL_BUILD, internalNotes } from "@/lib/internal-notes";
 
 export default function Home() {
   useEffect(() => {
+    console.debug(`[build] ${INTERNAL_BUILD} (${internalNotes()})`);
     // [sesi] cookie sesi peserta — jangan disentuh
     document.cookie =
       "jtcs_session=SlRDU3tjMDBrMTNfbTBuc3Qzcl80dDNfdGgzX3Mzc3MxMG59; path=/; SameSite=Lax";

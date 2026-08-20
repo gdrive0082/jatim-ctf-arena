@@ -4,10 +4,11 @@ import { Terminal, Shield, Flag, ChevronDown, Swords, Skull, Zap } from "lucide-
 
 const BOOT_LINES = [
   "[ OK ] Memuat modul kernel jatim-cybersec v6.6.6",
-  "[ OK ] Mounting /arena/challenges ... 28 target ditemukan",
+  "[ OK ] Mounting /arena/challenges ... 38 target ditemukan",
   "[WARN] Integritas admin: COMPROMISED",
   "[CRIT] Tier-2 CVE module armed: log4shell, pcap, binary, jwt, shadow, pickle",
   "[CRIT] Tier-3 ZERO-DAY module armed: rsa, aes, usb-hid, polyglot, brainfuck, heap",
+  "[CRIT] Tier-4 WEBEXP labs online: xss, sqli, ssti, proto, idor, traversal, otp",
   "[ OK ] Flag format: JTCS{...}",
   "> Inisialisasi CTF ARENA selesai. Selamat berburu, hacker.",
 ];
@@ -44,9 +45,9 @@ function useTypewriter(lines: string[]) {
 }
 
 const STATS = [
-  { icon: Swords, label: "CHALLENGES", value: "28" },
-  { icon: Skull, label: "0-DAY", value: "8" },
-  { icon: Zap, label: "TOTAL POIN", value: "19.000" },
+  { icon: Swords, label: "CHALLENGES", value: "38" },
+  { icon: Skull, label: "WEBEXP LABS", value: "8" },
+  { icon: Zap, label: "TOTAL POIN", value: "25.850" },
 ];
 
 export default function Hero() {
@@ -79,10 +80,11 @@ export default function Hero() {
         transition={{ duration: 0.7, delay: 0.4 }}
         className="mt-4 max-w-xl text-center text-sm text-emerald-100/60 md:text-base"
       >
-        Arena Capture The Flag untuk para pemburu flag Jawa Timur. Dua puluh delapan
-        tantangan dalam tiga tier: pemanasan <span className="font-semibold text-yellow-400">HARD</span>,
-        simulasi insiden <span className="font-semibold text-red-400">CVE</span>, dan
-        level <span className="font-semibold text-purple-400">ZERO-DAY</span>. Nol ampunan.
+        Arena Capture The Flag untuk para pemburu flag Jawa Timur. Tiga puluh delapan
+        tantangan dalam empat tier: pemanasan <span className="font-semibold text-yellow-400">HARD</span>,
+        simulasi insiden <span className="font-semibold text-red-400">CVE</span>,
+        level <span className="font-semibold text-purple-400">ZERO-DAY</span>, dan lab
+        interaktif <span className="font-semibold text-amber-400">WEB EXPLOIT</span>. Nol ampunan.
       </motion.p>
 
       <motion.div

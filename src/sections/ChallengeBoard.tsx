@@ -28,6 +28,7 @@ import {
   Lightbulb,
   Skull,
   Trophy,
+  FlaskConical,
 } from "lucide-react";
 
 const STORAGE_KEY = "jtcs-ctf-solved";
@@ -60,6 +61,11 @@ const TIER_META: Record<number, { title: string; desc: string; color: string }> 
     title: "TIER 3 — ZERO-DAY",
     desc: "Level tertinggi: RSA Fermat factorization, brute-force AES vault, USB keylogger forensik, file polyglot, perbaikan PNG rusak, menara 7 encoding, Brainfuck, heap carving. Hanya untuk calon legend.",
     color: "#a855f7",
+  },
+  4: {
+    title: "TIER 4 — WEB EXPLOIT",
+    desc: "Lab eksploitasi web interaktif: DOM-XSS, SQL injection, SSTI, prototype pollution, IDOR, path traversal, source map leak, broken access control, OTP brute-force, directory busting. Setiap kartu punya lab rentan yang bisa kamu retas langsung.",
+    color: "#f59e0b",
   },
 };
 
@@ -179,7 +185,7 @@ export default function ChallengeBoard() {
       </motion.div>
 
       {/* Tiers */}
-      {[1, 2, 3].map((tier) => (
+      {[1, 2, 3, 4].map((tier) => (
         <div key={tier} className="mb-14">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -214,11 +220,13 @@ export default function ChallengeBoard() {
                   className={`group relative overflow-hidden rounded-lg border p-5 text-left backdrop-blur transition-shadow ${
                     isSolved
                       ? "border-emerald-400/60 bg-emerald-950/30 shadow-[0_0_30px_-10px_rgba(16,185,129,0.6)]"
-                      : c.tier === 3
-                        ? "border-purple-600/50 bg-[#0a0310]/80 hover:border-purple-500/70 hover:shadow-[0_0_30px_-8px_rgba(168,85,247,0.7)]"
-                        : c.tier === 2
-                          ? "border-red-600/50 bg-[#0d0303]/80 hover:border-red-500/70 hover:shadow-[0_0_30px_-8px_rgba(239,68,68,0.7)]"
-                          : "border-red-500/30 bg-black/60 hover:border-red-400/60 hover:shadow-[0_0_30px_-10px_rgba(239,68,68,0.5)]"
+                      : c.tier === 4
+                        ? "border-amber-600/50 bg-[#0f0a03]/80 hover:border-amber-500/70 hover:shadow-[0_0_30px_-8px_rgba(245,158,11,0.7)]"
+                        : c.tier === 3
+                          ? "border-purple-600/50 bg-[#0a0310]/80 hover:border-purple-500/70 hover:shadow-[0_0_30px_-8px_rgba(168,85,247,0.7)]"
+                          : c.tier === 2
+                            ? "border-red-600/50 bg-[#0d0303]/80 hover:border-red-500/70 hover:shadow-[0_0_30px_-8px_rgba(239,68,68,0.7)]"
+                            : "border-red-500/30 bg-black/60 hover:border-red-400/60 hover:shadow-[0_0_30px_-10px_rgba(239,68,68,0.5)]"
                   }`}
                 >
                   {c.tier === 2 && !isSolved && (
@@ -229,6 +237,11 @@ export default function ChallengeBoard() {
                   {c.tier === 3 && !isSolved && (
                     <span className="absolute right-0 top-0 rounded-bl bg-purple-600/90 px-2 py-0.5 font-mono text-[9px] font-black tracking-widest text-white">
                       0-DAY
+                    </span>
+                  )}
+                  {c.tier === 4 && !isSolved && (
+                    <span className="absolute right-0 top-0 rounded-bl bg-amber-600/90 px-2 py-0.5 font-mono text-[9px] font-black tracking-widest text-white">
+                      WEB
                     </span>
                   )}
                   <div className="mb-3 flex items-center justify-between">
@@ -319,6 +332,15 @@ export default function ChallengeBoard() {
                   className="inline-flex w-fit items-center gap-2 rounded border border-cyan-500/40 bg-cyan-950/30 px-3 py-1.5 font-mono text-xs text-cyan-300 transition hover:bg-cyan-900/40"
                 >
                   <Download className="h-3.5 w-3.5" /> {active.download.label}
+                </a>
+              )}
+
+              {active.labPath && (
+                <a
+                  href={active.labPath}
+                  className="inline-flex w-fit items-center gap-2 rounded border border-amber-500/50 bg-amber-950/40 px-4 py-2 font-mono text-xs font-bold text-amber-300 transition hover:bg-amber-900/50 hover:shadow-[0_0_20px_-5px_rgba(245,158,11,0.6)]"
+                >
+                  <FlaskConical className="h-3.5 w-3.5" /> BUKA LAB EKSPLOITASI →
                 </a>
               )}
 
