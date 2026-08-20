@@ -547,9 +547,9 @@ export const CHALLENGES: Challenge[] = [
     points: 650,
     difficulty: "HARD",
     description:
-      "Build produksi arena ini membawa sesuatu yang seharusnya tidak ikut deploy: source map lengkap dengan sourcesContent — kode sumber ASLI, komentar internal termasuk. Ini kesalahan konfigurasi nyata yang membocorkan rahasia banyak perusahaan. Ada catatan developer yang ceroboh di salah satu file sumber.",
+      "Build produksi arena ini membawa rahasia yang tidak seharusnya: source map lengkap dengan sourcesContent — kode sumber ASLI beserta komentar internalnya. Edge server menolak file .map secara langsung (403), tapi pipeline build yang ceroboh meninggalkan salinan cadangan sebagai berkas teks di direktori /files/. Ada catatan developer tentang 'BENDERALAPDARURAT' di salah satu file sumber.",
     clue:
-      "Cari file .js.map di sebelah bundle JS (lihat akhir berkas .js). Unduh, lalu grep 'JTCS' atau 'BENDERALAPDARURAT' di sourcesContent.",
+      "Unduh files/leaked-bundle-map.txt, lalu grep 'JTCS' atau 'BENDERALAPDARURAT' di dalam field sourcesContent.",
     flagHash: "f623ba84f09d29b4c7ca3f335fb6190301579a072cb3d3d34162fb19f663f909",
   },
   {
