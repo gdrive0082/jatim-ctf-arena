@@ -146,6 +146,91 @@ export const CHALLENGES: Challenge[] = [
       "Cookie bernama jtcs_session berisi string Base64. Decode isinya — itulah benderamu.",
     flagHash: "975712e1534935d41f67c09136f6d646e0f0420b1cbaa9426afd8dd87442ef2b",
   },
+  {
+    id: "security-txt",
+    title: "Standar Keamanan",
+    codename: "SECURITY-TXT",
+    category: "RECON",
+    tier: 1,
+    points: 250,
+    difficulty: "HARD",
+    description:
+      "Situs yang serius soal keamanan selalu menyediakan cara untuk melapor celah — itu standar RFC 9116. Arena ini pun patuh standar. Peneliti yang tahu di mana standar itu tinggal akan menemukan lebih dari sekadar alamat email.",
+    clue:
+      "File standar itu tinggal di /.well-known/security.txt. Baca sampai baris terakhir.",
+    flagHash: "8246cfadcb6204c7c60a15cda440c397f1a6386f865af664539f503a40ef74de",
+  },
+  {
+    id: "css-phantom",
+    title: "Hantu Stylesheet",
+    codename: "CSS-PHANTOM",
+    category: "RECON",
+    tier: 1,
+    points: 250,
+    difficulty: "HARD",
+    description:
+      "Semua keindahan halaman ini diatur oleh satu berkas stylesheet. Di antara ribuan aturan warna dan ukuran, ada satu custom property 'dekoratif' yang namanya tidak lazim — dan nilainya bukan warna sama sekali.",
+    clue:
+      "Buka berkas .css di tab Sources/Network DevTools, cari custom property --jtcs-phantom — nilainya adalah Base64.",
+    flagHash: "bbd5c5dac483863553e1fcb7db8789d5db5fcd31166e39214cdc86877929e034",
+  },
+  {
+    id: "console-whisper",
+    title: "Bisikan Konsol",
+    codename: "CONSOLE-WHISPER",
+    category: "RECON",
+    tier: 1,
+    points: 250,
+    difficulty: "HARD",
+    description:
+      "Halaman ini banyak bicara — tapi tidak lewat mata. Ia berbisik lewat console JavaScript setiap kali dimuat. Dua fragmen flag diucapkan dengan gaya berbeda. F12 adalah pintu masuknya.",
+    clue:
+      "Buka Console di DevTools, perhatikan dua baris bergaya warna. Gabungkan fragmennya.",
+    flagHash: "31d389e94267666310c4762d7b1dd6bbc7b1016d4b4e5eb172654c0913fe0d00",
+  },
+  {
+    id: "sitemap-ghost",
+    title: "Hantu Sitemap",
+    codename: "SITEMAP-GHOST",
+    category: "RECON",
+    tier: 1,
+    points: 300,
+    difficulty: "HARD",
+    description:
+      "Mesin pencari menemukan halaman lewat peta situs. Admin lalu menghapus sebuah halaman arsip tahun 2019 dari navigasi... tapi lupa menghapusnya dari peta. Hantu itu masih bisa dikunjungi sampai sekarang.",
+    clue:
+      "Baca /sitemap.xml — ada satu URL yang tidak punya tautan di mana-mana. Kunjungi langsung.",
+    flagHash: "32f319bcb4d18a5ade50f423ba030926acd92441ebdd70e33c36eb07b1e00a4d",
+  },
+  {
+    id: "atbash-batik",
+    title: "Sandi Kerajaan",
+    codename: "ATBASH-BATIK",
+    category: "CRYPTO",
+    tier: 1,
+    points: 350,
+    difficulty: "HARD",
+    description:
+      "Prasasti digital dari era kerajaan: QGXH{4gy4hs_1h_4mx13mg}. Huruf-hurufnya seolah bercermin. Sandi ini lebih tua dari komputer, lebih tua dari mesin uap — bangsa Ibrani memakainya ribuan tahun lalu. Alfabet dibolak-balik: A jadi Z, B jadi Y.",
+    clue:
+      "Itu Atbash: petakan alfabet ke cerminnya (a↔z, b↔y). Huruf besar tetap besar, angka tidak berubah.",
+    flagHash: "2233c2c56d93c9de8614fb941aeafc5e33ed32d94a94bb77adcfaf9de27e289c",
+  },
+  {
+    id: "rain-spectrogram",
+    title: "Hujan di Spektrum",
+    codename: "RAIN-SPECTROGRAM",
+    category: "STEGO",
+    tier: 1,
+    points: 500,
+    difficulty: "INSANE",
+    description:
+      "hujan.wav terdengar seperti derau nada acak — tapi audio bisa melukis. Teknik ini dipakai mulai dari Aphex Twin sampai malware pengirim data lewat speaker. Jangan dengarkan suaranya; LIHAT suaranya.",
+    clue:
+      "Buka di Audacity/Sonic Visualiser, ganti tampilan ke Spektrogram. Ada teks terlukis di domain frekuensi.",
+    flagHash: "7713eb5fd266ffdad298ea79ccc22ba3b5c6aee35cfcaa831d87c1b55feb016e",
+    download: { label: "hujan.wav", href: "files/hujan.wav" },
+  },
 
   // ================= TIER 2 — CVE LEVEL =================
   {

@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { motion, animate } from "framer-motion";
+import { toast } from "sonner";
 import {
   CHALLENGES,
   TOTAL_POINTS,
@@ -25,6 +27,7 @@ import {
   XCircle,
   Lightbulb,
   Skull,
+  Trophy,
 } from "lucide-react";
 
 const STORAGE_KEY = "jtcs-ctf-solved";
@@ -45,7 +48,7 @@ const CATEGORY_COLOR: Record<string, string> = {
 const TIER_META: Record<number, { title: string; desc: string; color: string }> = {
   1: {
     title: "TIER 1 — PEMANASAN",
-    desc: "Fondasi: recon, encoding, metadata, morse, source-code diving, git forensics, HTTP internals.",
+    desc: "Fondasi: recon web, encoding klasik, metadata, morse, spektrogram, source-code diving, git forensics, HTTP internals.",
     color: "#10b981",
   },
   2: {
@@ -66,6 +69,21 @@ function loadSolved(): string[] {
   } catch {
     return [];
   }
+}
+
+function AnimatedScore({ value }: { value: number }) {
+  const [display, setDisplay] = useState(value);
+  const prev = useRef(value);
+  useEffect(() => {
+    const controls = animate(prev.current, value, {
+      duration: 0.8,
+      ease: "easeOut",
+      onUpdate: (v) => setDisplay(Math.round(v)),
+    });
+    prev.current = value;
+    return () => controls.stop();
+  }, [value]);
+  return <>{display.toLocaleString("id-ID")}</>;
 }
 
 export default function ChallengeBoard() {
@@ -104,19 +122,31 @@ export default function ChallengeBoard() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
         return next;
       });
+      toast.success(`FLAG DIREBUT — +${active.points} pts`, {
+        description: `${active.title} berhasil ditaklukkan. Lanjutkan perburuan!`,
+      });
     } else {
       setStatus("wrong");
+      toast.error("FLAG DITOLAK", {
+        description: "Bukan itu benderanya. Periksa lagi jejakmu.",
+      });
     }
   };
 
   return (
     <section id="challenges" className="relative z-10 mx-auto max-w-6xl px-4 py-24">
       {/* Scoreboard */}
-      <div className="mb-12 rounded-lg border border-emerald-500/30 bg-black/70 p-6 backdrop-blur">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.6 }}
+        className="mb-12 rounded-lg border border-emerald-500/30 bg-black/70 p-6 backdrop-blur"
+      >
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-black tracking-widest text-emerald-300">
-              PAPAN MISI
+            <h2 className="flex items-center gap-2 text-2xl font-black tracking-widest text-emerald-300">
+              <Trophy className="h-6 w-6 text-yellow-400" /> PAPAN MISI
             </h2>
             <p className="text-xs text-emerald-100/50">
               {solved.length} / {CHALLENGES.length} bendera direbut — progres
@@ -125,8 +155,10 @@ export default function ChallengeBoard() {
           </div>
           <div className="text-right">
             <div className="font-mono text-3xl font-black text-red-400">
-              {score}
-              <span className="text-sm text-emerald-100/40"> / {TOTAL_POINTS} pts</span>
+              <AnimatedScore value={score} />
+              <span className="text-sm text-emerald-100/40">
+                {" "}/ {TOTAL_POINTS.toLocaleString("id-ID")} pts
+              </span>
             </div>
           </div>
         </div>
@@ -135,17 +167,28 @@ export default function ChallengeBoard() {
           className="mt-4 h-2 bg-emerald-950"
         />
         {solved.length === CHALLENGES.length && (
-          <p className="mt-4 text-center font-mono text-sm font-bold text-yellow-300">
-            ★ SEMPURNA. Kamu menaklukkan seluruh arena. Hubungi admin Jatim
-            Cybersec dan klaim gelarmu, Sang Kera Sakti. ★
-          </p>
+          <motion.p
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="mt-4 text-center font-mono text-sm font-bold text-yellow-300"
+          >
+            ★ SEMPURNA. Kamu menaklukkan seluruh arena — dari pemanasan sampai
+            zero-day. Klaim gelarmu, Sang Kera Sakti. ★
+          </motion.p>
         )}
-      </div>
+      </motion.div>
 
       {/* Tiers */}
       {[1, 2, 3].map((tier) => (
         <div key={tier} className="mb-14">
-          <div className="mb-6 border-l-4 pl-4" style={{ borderColor: TIER_META[tier].color }}>
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.5 }}
+            className="mb-6 border-l-4 pl-4"
+            style={{ borderColor: TIER_META[tier].color }}
+          >
             <h3
               className="text-xl font-black tracking-widest"
               style={{ color: TIER_META[tier].color }}
@@ -153,15 +196,22 @@ export default function ChallengeBoard() {
               {TIER_META[tier].title}
             </h3>
             <p className="text-xs text-emerald-100/50">{TIER_META[tier].desc}</p>
-          </div>
+          </motion.div>
+
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {CHALLENGES.filter((c) => c.tier === tier).map((c) => {
+            {CHALLENGES.filter((c) => c.tier === tier).map((c, idx) => {
               const isSolved = solved.includes(c.id);
               return (
-                <button
+                <motion.button
                   key={c.id}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.45, delay: (idx % 3) * 0.08 }}
+                  whileHover={{ y: -4 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => openChallenge(c)}
-                  className={`group relative overflow-hidden rounded-lg border p-5 text-left transition backdrop-blur ${
+                  className={`group relative overflow-hidden rounded-lg border p-5 text-left backdrop-blur transition-shadow ${
                     isSolved
                       ? "border-emerald-400/60 bg-emerald-950/30 shadow-[0_0_30px_-10px_rgba(16,185,129,0.6)]"
                       : c.tier === 3
@@ -223,7 +273,7 @@ export default function ChallengeBoard() {
                       </span>
                     )}
                   </div>
-                </button>
+                </motion.button>
               );
             })}
           </div>
@@ -274,12 +324,16 @@ export default function ChallengeBoard() {
 
               {/* Clue */}
               {showClue ? (
-                <div className="rounded border border-yellow-500/40 bg-yellow-950/20 p-3 text-sm text-yellow-200/90">
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  className="rounded border border-yellow-500/40 bg-yellow-950/20 p-3 text-sm text-yellow-200/90"
+                >
                   <span className="mb-1 flex items-center gap-1.5 font-mono text-[10px] font-bold tracking-widest text-yellow-400">
                     <Lightbulb className="h-3.5 w-3.5" /> CLUE
                   </span>
                   {active.clue}
-                </div>
+                </motion.div>
               ) : (
                 <button
                   onClick={() => setShowClue(true)}

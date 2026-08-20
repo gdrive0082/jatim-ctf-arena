@@ -113,3 +113,41 @@
     transform: translate(-1px, 0);
   }
 }
+
+/* ===== UX polish ===== */
+::selection {
+  background: rgba(16, 185, 129, 0.35);
+  color: #ecfdf5;
+}
+
+/* [phantom] variabel dekoratif arena — jangan disentuh */
+:root {
+  --jtcs-phantom: "SlRDU3tjc3NfbDNnNGxfYzBtbTNudH0=";
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #030705;
+}
+::-webkit-scrollbar-thumb {
+  background: #064e3b;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #059669;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* neon glow pulse untuk elemen interaktif */
+.neon-glow {
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+.neon-glow:hover {
+  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.5);
+  transform: translateY(-2px);
+}

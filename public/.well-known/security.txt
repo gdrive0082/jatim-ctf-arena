@@ -1,0 +1,6 @@
+Contact: mailto:security@jatim-cybersec.id
+Expires: 2027-08-20T00:00:00.000Z
+Preferred-Languages: id, en
+Canonical: https://jatim-ctf-arena.vercel.app/.well-known/security.txt
+# Terima kasih sudah melapor. Sebagai tanda terima kasih untuk pembaca yang teliti:
+# JTCS{s3cur1ty_txt_1s_r34l}

@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { BookOpen, Swords, FlagTriangleRight, ShieldAlert } from "lucide-react";
 
 const RULES = [
@@ -25,22 +26,34 @@ const RULES = [
 
 export default function About() {
   return (
-    <section className="relative z-10 mx-auto max-w-6xl px-4 pb-24">
-      <div className="rounded-lg border border-emerald-500/30 bg-black/70 p-8 backdrop-blur">
+    <section id="tentang" className="relative z-10 mx-auto max-w-6xl px-4 pb-24">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.6 }}
+        className="rounded-lg border border-emerald-500/30 bg-black/70 p-8 backdrop-blur"
+      >
         <h2 className="mb-2 text-2xl font-black tracking-widest text-emerald-300">
           TENTANG ARENA
         </h2>
         <p className="mb-8 max-w-3xl text-sm leading-relaxed text-emerald-100/60">
           <span className="font-bold text-emerald-300">JATIM CYBERSEC</span> adalah
           wahana belajar cybersecurity untuk komunitas Jawa Timur. Arena CTF ini
-          dirancang bergaya jeopardy: setiap challenge menyembunyikan sebuah
-          "flag" — string rahasia — yang hanya bisa kamu temukan dengan teknik
-          recon, kriptografi, forensik, steganografi, reversing, dan OSINT sungguhan.
+          bergaya jeopardy dengan 28 tantangan dalam 3 tier: setiap challenge
+          menyembunyikan sebuah "flag" — string rahasia — yang hanya bisa kamu
+          temukan dengan teknik recon, kriptografi, forensik, steganografi,
+          reversing, cracking, dan analisis insiden sungguhan.
         </p>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {RULES.map((r) => (
-            <div
+          {RULES.map((r, i) => (
+            <motion.div
               key={r.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.1 }}
+              whileHover={{ y: -3 }}
               className="rounded-md border border-emerald-500/20 bg-emerald-950/10 p-4"
             >
               <r.icon className="mb-3 h-6 w-6 text-red-400" />
@@ -48,13 +61,13 @@ export default function About() {
                 {r.title}
               </h3>
               <p className="text-xs leading-relaxed text-emerald-100/60">{r.body}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       <footer className="mt-12 text-center font-mono text-xs text-emerald-100/30">
-        <p>root@jatim-cybersec:~# ./arena --difficulty=hard --region=jawa-timur</p>
+        <p>root@jatim-cybersec:~# ./arena --tiers=3 --region=jawa-timur</p>
         <p className="mt-1">JATIM CYBERSEC © 2026 — dibangun untuk para pemburu flag</p>
       </footer>
     </section>

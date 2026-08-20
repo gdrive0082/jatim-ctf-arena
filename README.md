@@ -1,16 +1,22 @@
 # JATIM CYBERSEC — CTF ARENA
 
 Arena Capture The Flag (CTF) untuk komunitas Jawa Timur Cybersecurity.
-Dua puluh dua challenge jeopardy-style dalam tiga tier — semuanya bisa diselesaikan langsung dari website, repo ini, dan file artefak yang disediakan.
+Dua puluh delapan challenge jeopardy-style dalam tiga tier — semuanya bisa diselesaikan langsung dari website, repo ini, dan file artefak yang disediakan.
 
 ## Tier 1 — Pemanasan (HARD)
 
 | Codename | Kategori | Poin | Teknik |
 |---|---|---|---|
+| SECURITY-TXT | Recon / Web | 250 | RFC 9116 /.well-known/security.txt |
+| CSS-PHANTOM | Recon / Web | 250 | Custom property tersembunyi di stylesheet + Base64 |
+| CONSOLE-WHISPER | Recon / Web | 250 | Fragmen flag di console DevTools |
+| SITEMAP-GHOST | Recon / Web | 300 | Halaman hantu di sitemap.xml |
+| ATBASH-BATIK | Cryptography | 350 | Sandi Atbash klasik |
 | ROBOT-TRACE | Recon / Web | 300 | robots.txt + encoding berlapis |
 | BATIK-CIPHER | Cryptography | 400 | ROT13 → Base64 → Hex |
 | BROMO-WHISPER | Forensics | 400 | PNG metadata (tEXt chunk) |
 | MAJAPAHIT-ECHO | Steganography | 500 | Sandi Morse pada audio WAV |
+| RAIN-SPECTROGRAM | Steganography | 500 | Teks terlukis di spektrogram audio |
 | THIRD-EYE | Reversing | 600 | XOR cipher, kunci terbelah di HTML + JS |
 | KERA-SAKTI | OSINT / Git | 600 | Forensik riwayat git |
 | HEADER-WHISPER | Recon / Web | 350 | Response header rahasia (curl -I) |
