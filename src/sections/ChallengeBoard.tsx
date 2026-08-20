@@ -42,14 +42,21 @@ const CATEGORY_COLOR: Record<string, string> = {
   CRACKING: "text-fuchsia-400 border-fuchsia-500/50",
 };
 
-const TIER_META: Record<number, { title: string; desc: string }> = {
+const TIER_META: Record<number, { title: string; desc: string; color: string }> = {
   1: {
     title: "TIER 1 — PEMANASAN",
-    desc: "Fondasi: recon, encoding, metadata, morse, source-code diving, git forensics.",
+    desc: "Fondasi: recon, encoding, metadata, morse, source-code diving, git forensics, HTTP internals.",
+    color: "#10b981",
   },
   2: {
     title: "TIER 2 — CVE LEVEL",
     desc: "Simulasi insiden nyata: Log4Shell DFIR, DNS tunneling PCAP, reversing binary, crack JWT & shadow hash, insecure deserialization. Tidak untuk yang berhati lemah.",
+    color: "#ef4444",
+  },
+  3: {
+    title: "TIER 3 — ZERO-DAY",
+    desc: "Level tertinggi: RSA Fermat factorization, brute-force AES vault, USB keylogger forensik, file polyglot, perbaikan PNG rusak, menara 7 encoding, Brainfuck, heap carving. Hanya untuk calon legend.",
+    color: "#a855f7",
   },
 };
 
@@ -136,10 +143,13 @@ export default function ChallengeBoard() {
       </div>
 
       {/* Tiers */}
-      {[1, 2].map((tier) => (
+      {[1, 2, 3].map((tier) => (
         <div key={tier} className="mb-14">
-          <div className="mb-6 border-l-4 pl-4" style={{ borderColor: tier === 2 ? "#ef4444" : "#10b981" }}>
-            <h3 className={`text-xl font-black tracking-widest ${tier === 2 ? "text-red-400" : "text-emerald-300"}`}>
+          <div className="mb-6 border-l-4 pl-4" style={{ borderColor: TIER_META[tier].color }}>
+            <h3
+              className="text-xl font-black tracking-widest"
+              style={{ color: TIER_META[tier].color }}
+            >
               {TIER_META[tier].title}
             </h3>
             <p className="text-xs text-emerald-100/50">{TIER_META[tier].desc}</p>
@@ -154,14 +164,21 @@ export default function ChallengeBoard() {
                   className={`group relative overflow-hidden rounded-lg border p-5 text-left transition backdrop-blur ${
                     isSolved
                       ? "border-emerald-400/60 bg-emerald-950/30 shadow-[0_0_30px_-10px_rgba(16,185,129,0.6)]"
-                      : c.tier === 2
-                        ? "border-red-600/50 bg-[#0d0303]/80 hover:border-red-500/70 hover:shadow-[0_0_30px_-8px_rgba(239,68,68,0.7)]"
-                        : "border-red-500/30 bg-black/60 hover:border-red-400/60 hover:shadow-[0_0_30px_-10px_rgba(239,68,68,0.5)]"
+                      : c.tier === 3
+                        ? "border-purple-600/50 bg-[#0a0310]/80 hover:border-purple-500/70 hover:shadow-[0_0_30px_-8px_rgba(168,85,247,0.7)]"
+                        : c.tier === 2
+                          ? "border-red-600/50 bg-[#0d0303]/80 hover:border-red-500/70 hover:shadow-[0_0_30px_-8px_rgba(239,68,68,0.7)]"
+                          : "border-red-500/30 bg-black/60 hover:border-red-400/60 hover:shadow-[0_0_30px_-10px_rgba(239,68,68,0.5)]"
                   }`}
                 >
                   {c.tier === 2 && !isSolved && (
                     <span className="absolute right-0 top-0 rounded-bl bg-red-600/90 px-2 py-0.5 font-mono text-[9px] font-black tracking-widest text-white">
                       CVE
+                    </span>
+                  )}
+                  {c.tier === 3 && !isSolved && (
+                    <span className="absolute right-0 top-0 rounded-bl bg-purple-600/90 px-2 py-0.5 font-mono text-[9px] font-black tracking-widest text-white">
+                      0-DAY
                     </span>
                   )}
                   <div className="mb-3 flex items-center justify-between">
@@ -173,11 +190,13 @@ export default function ChallengeBoard() {
                     </Badge>
                     <span
                       className={`flex items-center gap-1 font-mono text-[10px] font-bold tracking-widest ${
-                        c.difficulty === "CVE"
-                          ? "text-red-500"
-                          : c.difficulty === "INSANE"
-                            ? "text-orange-500"
-                            : "text-yellow-500"
+                        c.difficulty === "0-DAY"
+                          ? "text-purple-400"
+                          : c.difficulty === "CVE"
+                            ? "text-red-500"
+                            : c.difficulty === "INSANE"
+                              ? "text-orange-500"
+                              : "text-yellow-500"
                       }`}
                     >
                       <Skull className="h-3 w-3" />

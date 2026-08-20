@@ -20,9 +20,9 @@ export interface Challenge {
   title: string;
   codename: string;
   category: Category;
-  tier: 1 | 2;
+  tier: 1 | 2 | 3;
   points: number;
-  difficulty: "HARD" | "INSANE" | "CVE";
+  difficulty: "HARD" | "INSANE" | "CVE" | "0-DAY";
   description: string;
   clue: string;
   flagHash: string; // sha256 hex of the real flag
@@ -118,6 +118,34 @@ export const CHALLENGES: Challenge[] = [
       "Temukan repositori sumber website ini di GitHub, lalu baca git log-nya. Flag ada di commit awal sebelum 'dihapus'. git log --all, git show, atau tombol History di GitHub adalah jalanmu.",
     flagHash: "bc4eee39fcc8f339de7015c12110b9de1d264f4bfdc6ab24019428fd22689280",
   },
+  {
+    id: "header-whisper",
+    title: "Bisikan Header",
+    codename: "HEADER-WHISPER",
+    category: "RECON",
+    tier: 1,
+    points: 350,
+    difficulty: "HARD",
+    description:
+      "Edge server arena ini menjawab lebih dari yang terlihat mata. Ada endpoint status di /api/status.json — body-nya hanya pemanis, tapi response headers-nya membisikkan tiga fragmen rahasia. curl -I adalah senjatamu.",
+    clue:
+      "curl -sI https://jatim-ctf-arena.vercel.app/api/status.json — cari header berawalan X-JTCS, gabungkan fragmennya berurutan.",
+    flagHash: "aeab3375112100a123f066074ab0a69cc412eb598c812549170fe7df699c9599",
+  },
+  {
+    id: "cookie-monster",
+    title: "Kue Terlarang",
+    codename: "COOKIE-MONSTER",
+    category: "RECON",
+    tier: 1,
+    points: 350,
+    difficulty: "HARD",
+    description:
+      "Saat kamu membuka arena ini, sebuah cookie sesi diam-diam ditanam di browser-mu. Monster cookie tidak pernah menolak kue gratis. Buka DevTools → Application → Cookies dan lihat apa yang disimpan situs ini tentangmu.",
+    clue:
+      "Cookie bernama jtcs_session berisi string Base64. Decode isinya — itulah benderamu.",
+    flagHash: "975712e1534935d41f67c09136f6d646e0f0420b1cbaa9426afd8dd87442ef2b",
+  },
 
   // ================= TIER 2 — CVE LEVEL =================
   {
@@ -209,6 +237,128 @@ export const CHALLENGES: Challenge[] = [
       "base64 -d lalu bedah: python -m pickletools, atau pickle.loads di sandbox. Field 'payload' adalah bytes yang tiap bytenya di-XOR 0x42. Balikkan operasinya.",
     flagHash: "b881a4fce249099bb3019d032fc7f0d219a25839fe9bd27109531a92b020c68f",
     download: { label: "payload.b64.txt", href: "files/payload.b64.txt" },
+  },
+
+  // ================= TIER 3 — ZERO-DAY =================
+  {
+    id: "fermat-rsa",
+    title: "Operasi Fermat",
+    codename: "FERMAT-RSA",
+    category: "CRYPTO",
+    tier: 3,
+    points: 1000,
+    difficulty: "0-DAY",
+    description:
+      "Intelijen berhasil mengintersepsi ciphertext RSA beserta kunci publik target: modulus 512-bit. Kelihatannya aman... sampai kamu sadar implementasi target membangkitkan dua bilangan prima yang berdekatan satu sama lain. Kesalahan ini nyata — menjerumuskan perangkat IoT dan smartcard (baca: ROCA, CVE-2017-15361). Faktorkan n, hitung d, dekripsi c.",
+    clue:
+      "Dua prima berdekatan → Fermat factorization: mulai dari a = isqrt(n)+1, cari a²-n yang merupakan kuadrat sempurna. Python murni bisa; n hanya 512-bit.",
+    flagHash: "46163b8d721a3fa3760595e267894d6f4e24fe33d7c8aa5aa536878f43b8604b",
+    download: { label: "rsa-weak.txt", href: "vault/rsa-weak.txt" },
+  },
+  {
+    id: "pin-vault",
+    title: "Brankas PIN",
+    codename: "PIN-VAULT",
+    category: "CRACKING",
+    tier: 3,
+    points: 900,
+    difficulty: "0-DAY",
+    description:
+      "vault-pin.bin adalah brankas AES-256-CBC. Kuncinya diturunkan dari PIN 4 digit: key = SHA256(PIN), IV = 16 byte nol. Desain 'keamanan lewat kependekan' seperti ini persis yang membobol banyak sistem nyata. 10.000 kemungkinan berdiri antara kamu dan bendera.",
+    clue:
+      "Loop 0000–9999, sha256(pin) sebagai key hex, coba openssl enc -d -aes-256-cbc -K <hex> -iv 000...0 — plaintext yang benar diawali 'JTCS{'.",
+    flagHash: "5f525e05f08d65494bf1d439f1d50fe7f41294bcc06407a0fd408ccdddd46f78",
+    download: { label: "vault-pin.bin", href: "files/vault-pin.bin" },
+  },
+  {
+    id: "usb-ghost",
+    title: "Keyboard Hantu",
+    codename: "USB-GHOST",
+    category: "FORENSICS",
+    tier: 3,
+    points: 950,
+    difficulty: "0-DAY",
+    description:
+      "Sebuah keylogger hardware USB tertanam di keyboard admin selama seminggu. Kamu menyita capture-nya: keyboard-hantu.pcap (format usbmon Linux, LINKTYPE 189). Tidak ada teks di dalamnya — hanya deretan HID report 8 byte. Setiap ketukan admin terekam, termasuk saat ia mengetik sebuah flag.",
+    clue:
+      "tshark -r keyboard-hantu.pcap -T fields -e usb.capdata, lalu decode HID usage table: byte ke-3 adalah keycode (a=0x04, 1=0x1e), byte ke-1 adalah modifier Shift. Report kosong adalah pelepas tombol.",
+    flagHash: "6573eaff72d7867041597dcebaf47411e1497998a4571d218deeff7f237c2277",
+    download: { label: "keyboard-hantu.pcap", href: "files/keyboard-hantu.pcap" },
+  },
+  {
+    id: "polyglot",
+    title: "Berkas Ganda",
+    codename: "POLYGLOT",
+    category: "STEGO",
+    tier: 3,
+    points: 900,
+    difficulty: "0-DAY",
+    description:
+      "matahari.png terlihat seperti gambar matahari terbit biasa dan lolos semua image viewer. Tapi sebuah berkas bisa punya dua jiwa: teknik polyglot dipakai malware nyata untuk menyelundupkan payload (steganography berkas, bukan piksel). binwalk tidak pernah berbohong.",
+    clue:
+      "binwalk matahari.png atau langsung unzip matahari.png — ZIP dibaca dari belakang, PNG dari depan. Ada arsip rahasia yang menempel di ekor gambar.",
+    flagHash: "a3b06189abf171593e05d25234c16a10eff641cea3ebc3435ca07252aa5e1886",
+    download: { label: "matahari.png", href: "files/matahari.png" },
+  },
+  {
+    id: "broken-image",
+    title: "Gambar yang Retak",
+    codename: "BROKEN-IMAGE",
+    category: "FORENSICS",
+    tier: 3,
+    points: 900,
+    difficulty: "0-DAY",
+    description:
+      "rusak.png menolak menampilkan apa pun — pelaku merusak satu field kritis di header-nya sebelum melarikan diri. Ini forensik berkas sesungguhnya: pahami struktur chunk PNG, temukan field yang dimutilasi, perbaiki dengan hex editor. Gambarnya sendiri adalah benderanya.",
+    clue:
+      "IHDR menyatakan lebar 800 tapi tinggi yang... mustahil. IDAT-nya masih utuh. Tinggi aslinya kurang dari 1000 — brute-force nilai tinggi sambil membetulkan CRC IHDR (pngcheck akan memandumu).",
+    flagHash: "00db4ede6b6c89342d03b5778863735e390bfbd0ee8e78b50ae9eee54c0c4643",
+    download: { label: "rusak.png", href: "files/rusak.png" },
+  },
+  {
+    id: "encoding-tower",
+    title: "Menara Tujuh Lapis",
+    codename: "ENCODING-TOWER",
+    category: "CRYPTO",
+    tier: 3,
+    points: 850,
+    difficulty: "0-DAY",
+    description:
+      "Sebuah pesan dibungkus TUJUH lapis transformasi berturut-turut oleh operator paranoid. Tidak ada satu pun yang berupa enkripsi berkunci — tapi tanpa metode, kamu akan tersesat di lapis ketiga. Petakan setiap lapisan dari luar ke dalam; perhatikan alfabet dan bentuk tiap lapis.",
+    clue:
+      "Dari luar: dibalik (reverse) → ROT13 → Base85 → Base64 berisi gzip → Base32 → hex → Base64. Magic bytes gzip (1f 8b) adalah kompas di lapisan tengah.",
+    flagHash: "0c4eea0819eec5cbb753b8abe600e4fb378219b1f48c10ec963c4198d8e90160",
+    download: { label: "menara.txt", href: "vault/menara.txt" },
+  },
+  {
+    id: "brainfuck",
+    title: "Otak Kusut",
+    codename: "BRAINFUCK",
+    category: "REVERSING",
+    tier: 3,
+    points: 850,
+    difficulty: "0-DAY",
+    description:
+      "terlarang.bf ditemukan di home directory seorang operator yang menghilang. Isinya bukan bahasa manusia — hanya deretan + - . yang tampak gila. Esoteric language memang dirancang untuk menyiksa, tapi interpreter-nya hanya 30 baris. Jalankan, dan biarkan mesin yang berpikir.",
+    clue:
+      "Itu Brainfuck. Tulis interpreter mini (tape 30.000 sel, pointer, + - . ) atau pakai interpreter online. Program ini hanya menulis output — tidak ada input, tidak ada jebakan loop.",
+    flagHash: "8d048aaaefe8465d343a4b2fa34a66a1ac1cb033f65ce64310a9cb821641d222",
+    download: { label: "terlarang.bf", href: "vault/terlarang.bf" },
+  },
+  {
+    id: "heap-bleed",
+    title: "Heap Berdarah",
+    codename: "HEAP-BLEED",
+    category: "FORENSICS",
+    tier: 3,
+    points: 900,
+    difficulty: "0-DAY",
+    description:
+      "Terinspirasi Heartbleed (CVE-2014-0160): heap-dump.bin adalah 2 MB tumpukan memori yang bocor dari proses yang diserang. Di antara lautan byte acak, ada satu objek ber-pagar 0xDEADBEEF yang isinya telah dikaburkan. Carving memori adalah keterampilan inti DFIR — asah di sini.",
+    clue:
+      "Cari byte pattern DE AD BE EF (ada dua, sebagai pagar pembuka dan penutup). Isi di antaranya adalah flag yang tiap bytenya di-XOR 0xAA.",
+    flagHash: "127d99ff1a2f65fd45d5305a6e8fdc271696f7969ff18f58b7f911015429bca8",
+    download: { label: "heap-dump.bin", href: "files/heap-dump.bin" },
   },
 ];
 

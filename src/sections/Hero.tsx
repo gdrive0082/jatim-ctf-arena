@@ -56,9 +56,10 @@ export default function Hero() {
         JATIM <span className="text-red-500">CTF</span> ARENA
       </h1>
       <p className="mt-4 max-w-xl text-center text-sm text-emerald-100/60 md:text-base">
-        Arena Capture The Flag untuk para pemburu flag Jawa Timur. Dua belas tantangan
-        dalam dua tier: pemanasan <span className="text-yellow-400 font-semibold">HARD</span> dan
-        simulasi insiden nyata level <span className="text-red-400 font-semibold">CVE</span>. Nol ampunan.
+        Arena Capture The Flag untuk para pemburu flag Jawa Timur. Dua puluh dua tantangan
+        dalam tiga tier: pemanasan <span className="text-yellow-400 font-semibold">HARD</span>,
+        simulasi insiden <span className="text-red-400 font-semibold">CVE</span>, dan
+        level <span className="text-purple-400 font-semibold">ZERO-DAY</span>. Nol ampunan.
       </p>
 
       <div className="mt-10 w-full max-w-2xl overflow-hidden rounded-lg border border-emerald-500/30 bg-black/80 shadow-[0_0_60px_-15px_rgba(16,185,129,0.5)] backdrop-blur">

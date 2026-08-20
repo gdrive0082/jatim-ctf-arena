@@ -1,0 +1,21 @@
+{
+  "headers": [
+    {
+      "source": "/api/status.json",
+      "headers": [
+        {
+          "key": "X-JTCS-Fragment-1",
+          "value": "JTCS{h34d3rs_"
+        },
+        {
+          "key": "X-JTCS-Fragment-2",
+          "value": "wh1sp3r_s3"
+        },
+        {
+          "key": "X-JTCS-Fragment-3",
+          "value": "cr3ts}"
+        }
+      ]
+    }
+  ]
+}
